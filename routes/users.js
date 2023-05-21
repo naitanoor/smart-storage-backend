@@ -12,7 +12,6 @@ const checkEmailExists = async (email) => {
 
 router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
-  console.log({ name, email, password });
   try {
     // Check if email already exists
     const emailExists = await checkEmailExists(email);
