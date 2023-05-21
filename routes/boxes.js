@@ -85,9 +85,9 @@ router.get("/search", async (req, res) => {
     const sql = `
       SELECT b.*
       FROM Boxes b
-      WHERE b.boxName LIKE ? OR b.boxNumber LIKE ?
+      WHERE b.boxName LIKE ? OR b.boxNumber LIKE ? OR b.qrCode LIKE ?
     `;
-    const params = [`%${query}%`, `%${query}%`];
+    const params = [`%${query}%`, `%${query}%`, `%${query}%`];
 
     const boxResults = await db.query(sql, params);
 
@@ -142,6 +142,73 @@ router.get("/search", async (req, res) => {
   } catch (error) {
     console.error("Error searching for boxes:", error);
     res.status(500).send("Error searching for boxes");
+  }
+});
+
+// GET /boxes/user/:userId
+router.get("/user/:userId", async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    // Retrieve all boxes and their associated items for the specified user
+    const sql = `
+      SELECT b.*, i.itemId, i.name AS itemName, i.itemNumber, i.itemImage, i.keywords
+      FROM Boxes b
+      LEFT JOIN Items i ON b.boxId = i.boxId
+      WHERE b.userId = ?
+    `;
+    const params = [userId];
+
+    const results = await db.query(sql, params);
+
+    // Group the results by box ID
+    const boxes = {};
+    results.forEach((row) => {
+      const {
+        boxId,
+        boxName,
+        boxNumber,
+        rackNumber,
+        storeRoom,
+        warehouse,
+        qrCode,
+        itemId,
+        itemName,
+        itemNumber,
+        itemImage,
+        keywords,
+      } = row;
+
+      if (!boxes[boxId]) {
+        boxes[boxId] = {
+          boxId,
+          boxName,
+          boxNumber,
+          rackNumber,
+          storeRoom,
+          warehouse,
+          qrCode,
+          items: [],
+        };
+      }
+
+      if (itemId) {
+        boxes[boxId].items.push({
+          itemId,
+          name: itemName,
+          itemNumber,
+          itemImage,
+          keywords,
+        });
+      }
+    });
+
+    const boxData = Object.values(boxes);
+
+    res.json({ boxes: boxData });
+  } catch (error) {
+    console.error("Error retrieving boxes:", error);
+    res.status(500).send("Error retrieving boxes");
   }
 });
 
