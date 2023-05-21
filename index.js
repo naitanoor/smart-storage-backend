@@ -16,6 +16,9 @@ app.use("/", exampleRoute);
 const usersRoute = require("./routes/users");
 app.use("/users", usersRoute);
 
+const boxesRoute = require("./routes/boxes");
+app.use("/boxes", boxesRoute);
+
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
