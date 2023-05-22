@@ -26,7 +26,7 @@ router.post("/create", async (req, res) => {
       // throw new Error("QrCode already used");
       return res.status(400).json({
         success: false,
-        error:
+        message:
           "QrCode already attached to some other box, make sure to attach a new one.",
       });
     }
@@ -61,9 +61,11 @@ router.post("/create", async (req, res) => {
       boxId,
     ]);
 
-    res
-      .status(201)
-      .json({ box: newBox[0], message: "Box and items created successfully" });
+    res.status(201).json({
+      success: true,
+      box: newBox[0],
+      message: "Box and items created successfully",
+    });
   } catch (error) {
     console.error("Error creating new box and items:", error);
 
@@ -79,15 +81,15 @@ router.post("/create", async (req, res) => {
 
 // GET /boxes/search
 router.get("/search", async (req, res) => {
-  const { query } = req.query;
+  const { query, userId } = req.query;
 
   try {
     const sql = `
       SELECT b.*
       FROM Boxes b
-      WHERE b.boxName LIKE ? OR b.boxNumber LIKE ? OR b.qrCode LIKE ?
+      WHERE (b.boxName LIKE ? OR b.boxNumber LIKE ? OR b.qrCode LIKE ?) AND b.userId = ?
     `;
-    const params = [`%${query}%`, `%${query}%`, `%${query}%`];
+    const params = [`%${query}%`, `%${query}%`, `%${query}%`, userId];
 
     const boxResults = await db.query(sql, params);
 
@@ -101,7 +103,6 @@ router.get("/search", async (req, res) => {
         storeRoom,
         warehouse,
         qrCode,
-        userId,
       } = box;
 
       const itemSql = `
