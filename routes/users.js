@@ -77,6 +77,80 @@ router.post("/signin", async (req, res) => {
   }
 });
 
+// GET /users/:userId
+router.get("/get-user/:userId", async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    // Retrieve user data
+    const userSql = `
+      SELECT *
+      FROM Users
+      WHERE userId = ?
+    `;
+    const userParams = [userId];
+    const userResults = await db.query(userSql, userParams);
+    const user = userResults[0];
+
+    // Retrieve user's boxes and associated items
+    const boxSql = `
+      SELECT b.*, i.itemId, i.name AS itemName, i.itemNumber, i.keywords
+      FROM Boxes b
+      LEFT JOIN Items i ON b.boxId = i.boxId
+      WHERE b.userId = ?
+    `;
+    const boxParams = [userId];
+    const boxResults = await db.query(boxSql, boxParams);
+
+    // Group the boxes by box ID
+    const boxes = {};
+    boxResults.forEach((row) => {
+      const {
+        boxId,
+        boxName,
+        boxNumber,
+        rackNumber,
+        storeRoom,
+        warehouse,
+        qrCode,
+        itemId,
+        itemName,
+        itemNumber,
+        keywords,
+      } = row;
+
+      if (!boxes[boxId]) {
+        boxes[boxId] = {
+          boxId,
+          boxName,
+          boxNumber,
+          rackNumber,
+          storeRoom,
+          warehouse,
+          qrCode,
+          items: [],
+        };
+      }
+
+      if (itemId) {
+        boxes[boxId].items.push({
+          itemId,
+          name: itemName,
+          itemNumber,
+          keywords,
+        });
+      }
+    });
+
+    const boxData = Object.values(boxes);
+
+    res.json({ user, boxes: boxData });
+  } catch (error) {
+    console.error("Error retrieving user data:", error);
+    res.status(500).send("Error retrieving user data");
+  }
+});
+
 router.put("/update/:userId", async (req, res) => {
   const userId = req.params.userId;
   const newName = req.body.name;
