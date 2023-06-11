@@ -85,10 +85,19 @@ router.get("/search", async (req, res) => {
 
   try {
     const sql = `
-      SELECT b.*
-      FROM Boxes b
-      WHERE (b.boxName LIKE ? OR b.boxNumber LIKE ? OR b.qrCode LIKE ?) AND b.userId = ?
-    `;
+    SELECT b.boxId, b.boxName, b.boxNumber, b.rackNumber, b.qrCode, b.userId,
+           w.id AS warehouseId, w.name AS warehouseName, w.location AS warehouseLocation, w.capacity AS warehouseCapacity,
+           w.contact_person AS warehouseContactPerson, w.contact_phone AS warehouseContactPhone,
+           s.id AS storeroomId, s.name AS storeroomName, s.capacity AS storeroomCapacity,
+           s.contact_person AS storeroomContactPerson, s.contact_phone AS storeroomContactPhone,
+           r.rack_id AS rackId, r.rack_name AS rackName, r.rack_number AS rackNumber, r.capacity AS rackCapacity, r.rack_type AS rackType
+    FROM Boxes b
+    INNER JOIN Warehouses w ON b.warehouse = w.id
+    INNER JOIN Storerooms s ON b.storeRoom = s.id
+    INNER JOIN Racks r ON b.rackNumber = r.rack_id
+    WHERE (b.boxName LIKE ? OR b.boxNumber LIKE ? OR b.qrCode LIKE ?) AND b.userId = ?
+  `;
+
     const params = [`%${query}%`, `%${query}%`, `%${query}%`, userId];
 
     const boxResults = await db.query(sql, params);
@@ -99,10 +108,24 @@ router.get("/search", async (req, res) => {
         boxId,
         boxName,
         boxNumber,
-        rackNumber,
-        storeRoom,
-        warehouse,
         qrCode,
+        userId,
+        warehouseId,
+        warehouseName,
+        warehouseLocation,
+        warehouseCapacity,
+        warehouseContactPerson,
+        warehouseContactPhone,
+        storeroomId,
+        storeroomName,
+        storeroomCapacity,
+        storeroomContactPerson,
+        storeroomContactPhone,
+        rackId,
+        rackName,
+        rackNumber,
+        rackCapacity,
+        rackType,
       } = box;
 
       const itemSql = `
@@ -124,15 +147,41 @@ router.get("/search", async (req, res) => {
         };
       });
 
+      const warehouse = {
+        warehouseId,
+        name: warehouseName,
+        location: warehouseLocation,
+        capacity: warehouseCapacity,
+        contactPerson: warehouseContactPerson,
+        contactPhone: warehouseContactPhone,
+      };
+
+      const storeroom = {
+        warehouseId,
+        storeroomId,
+        name: storeroomName,
+        capacity: storeroomCapacity,
+        contactPerson: storeroomContactPerson,
+        contactPhone: storeroomContactPhone,
+      };
+
+      const rack = {
+        rackId,
+        name: rackName,
+        number: rackNumber,
+        capacity: rackCapacity,
+        type: rackType,
+      };
+
       const boxData = {
         boxId,
         boxName,
         boxNumber,
-        rackNumber,
-        storeRoom,
+        storeRoom: storeroom,
         warehouse,
         qrCode,
         userId,
+        rack,
         items,
       };
 

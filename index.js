@@ -22,8 +22,9 @@ app.use("/users", usersRoute);
 const boxesRoute = require("./routes/boxes");
 app.use("/boxes", boxesRoute);
 
+const storageRoute = require("./routes/storage");
+app.use("/storage", storageRoute);
+
 app.listen(port, () => {
   console.log(`Server listening at http://localhost:${port}`);
 });
-
-// // Create a MySQL connection pool
