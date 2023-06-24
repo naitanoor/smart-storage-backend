@@ -185,10 +185,17 @@ router.post("/forget-password", async (req, res) => {
       return res.status(404).json({ message: "Email not found" });
     }
 
-    // Generate a 6-digit random reset code
+    // Change the status of all previous reset codes to "USED"
+    await db.query(
+      "UPDATE AuthReset SET resetCodeStatus = 'USED' WHERE email = ?",
+      [email]
+    );
+
+    // Generate a new 6-digit random reset code
     const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
-    const transporter = await createTransporter();
+
     // Send the password reset email
+    const transporter = await createTransporter();
     const mailOptions = {
       from: "smart-storage@app.com", // Replace with your email address
       to: email,
@@ -223,7 +230,7 @@ router.post("/confirm-reset-password", async (req, res) => {
 
     // Check if the reset code status is "PENDING"
     const authResetEntry = await db.query(
-      "SELECT * FROM AuthReset WHERE email = ?",
+      "SELECT * FROM AuthReset WHERE email = ? AND resetCodeStatus ='PENDING'",
       [email]
     );
 
