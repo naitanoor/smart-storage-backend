@@ -1,16 +1,9 @@
 const express = require("express");
 const cors = require("cors");
-var enforce = require("express-sslify");
 
 const app = express();
 
-const PORT = 8080;
-
-app.use(
-  enforce.HTTPS({
-    trustProtoHeader: true,
-  })
-);
+const PORT = 4000;
 
 app.use(express.json());
 app.use(
@@ -33,5 +26,5 @@ const storageRoute = require("./routes/storage");
 app.use("/storage", storageRoute);
 
 app.listen(PORT, () => {
-  console.log(`Server listening at http://0.0.0.0:${PORT}`);
+  console.log(`Server listening at http://localhost:${PORT}`);
 });
