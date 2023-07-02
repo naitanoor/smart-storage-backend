@@ -2,8 +2,8 @@ const config = {
   db: {
     host: "34.133.42.44",
     user: "root",
-    password: "",
-    database: "smart-storage",
+    password: "12345678",
+    database: "smart_storage",
   },
   listPerPage: 10,
 };

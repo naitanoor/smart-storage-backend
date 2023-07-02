@@ -93,7 +93,7 @@ router.post("/storeroom/add", async (req, res) => {
     }
 
     const result = await db.query(
-      "INSERT INTO Storerooms (name, capacity, contact_person, contact_phone, warehouse_id, user_id) VALUES (?, ?, ?, ?, ?, ?)",
+      "INSERT INTO Storerooms (name, capacity, contact_person, contact_phone, warehouse_id, userId) VALUES (?, ?, ?, ?, ?, ?)",
       [
         storeroom.name,
         storeroom.capacity,
@@ -122,7 +122,7 @@ router.get("/storerooms/:warehouseId/:userId", async (req, res) => {
 
   try {
     const storerooms = await db.query(
-      "SELECT * FROM Storerooms WHERE warehouse_id = ? AND user_id = ?",
+      "SELECT * FROM Storerooms WHERE warehouse_id = ? AND userId = ?",
       [warehouseId, userId]
     );
 
@@ -145,7 +145,7 @@ router.post("/rack/add", async (req, res) => {
     !rack?.rack_number ||
     !rack?.storeroom_id ||
     !rack?.warehouse_id ||
-    !rack?.user_id
+    !rack?.userId
   ) {
     return res
       .status(400)
@@ -154,7 +154,7 @@ router.post("/rack/add", async (req, res) => {
 
   try {
     const result = await db.query(
-      "INSERT INTO Racks (rack_name, capacity, rack_type, rack_number, storeroom_id, warehouse_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      "INSERT INTO Racks (rack_name, capacity, rack_type, rack_number, storeroom_id, warehouse_id, userId) VALUES (?, ?, ?, ?, ?, ?, ?)",
       [
         rack.rack_name,
         rack.capacity,
@@ -162,7 +162,7 @@ router.post("/rack/add", async (req, res) => {
         rack.rack_number,
         rack.storeroom_id,
         rack.warehouse_id,
-        rack.user_id,
+        rack.userId,
       ]
     );
 
@@ -187,7 +187,7 @@ router.get("/racks/:userId/:warehouseId/:storeroomId", async (req, res) => {
   try {
     // Retrieve racks based on warehouse ID, storeroom ID, and user ID
     const racks = await db.query(
-      "SELECT * FROM Racks WHERE warehouse_id = ? AND storeroom_id = ? AND user_id = ?",
+      "SELECT * FROM Racks WHERE warehouse_id = ? AND storeroom_id = ? AND userId = ?",
       [warehouseId, storeroomId, userId]
     );
     res.status(200).json({ success: true, data: racks });

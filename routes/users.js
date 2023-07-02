@@ -18,7 +18,7 @@ async function createTransporter() {
 
 // Function to check if email already exists
 const checkEmailExists = async (email) => {
-  const existingUser = await db.query("SELECT * FROM users WHERE email = ?", [
+  const existingUser = await db.query("SELECT * FROM Users WHERE email = ?", [
     email,
   ]);
   return existingUser.length > 0;
@@ -35,7 +35,7 @@ router.post("/signup", async (req, res) => {
 
     // Insert new user
     const result = await db.query(
-      "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
+      "INSERT INTO Users (name, email, password) VALUES (?, ?, ?)",
       [name, email, password]
     );
     if (result.length === 0) {
@@ -53,17 +53,19 @@ router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
   try {
     const result = await db.query(
-      "SELECT * FROM users WHERE email = ? AND password = ?",
+      "SELECT * FROM Users WHERE email = ? AND password = ?",
       [email, password]
     );
-
     if (result.length === 0) {
-      res.status(401).send("Invalid email or password");
+      res
+        .status(401)
+        .send({ success: false, message: "Invalid email or password" });
       return;
     }
 
     const user = result[0];
     res.json({
+      success: true,
       message: "User signin successful",
       user: {
         userId: user.userId,
@@ -73,11 +75,11 @@ router.post("/signin", async (req, res) => {
     });
   } catch (error) {
     console.error("Error signing in user:", error);
-    res.status(500).send("Error signing in user");
+    res.status(500).send({ success: false, message: "Error signing in user" });
   }
 });
 
-// GET /users/:userId
+// GET /Users/:userId
 router.get("/get-user/:userId", async (req, res) => {
   const userId = req.params.userId;
 
@@ -157,7 +159,7 @@ router.put("/update/:userId", async (req, res) => {
 
   try {
     const result = await db.query(
-      "UPDATE users SET name = ? WHERE userId = ?",
+      "UPDATE Users SET name = ? WHERE userId = ?",
       [newName, userId]
     );
     if (result.affectedRows === 0) {
@@ -165,7 +167,7 @@ router.put("/update/:userId", async (req, res) => {
       return;
     }
     // Retrieve the updated user data from the database
-    const updatedUser = await db.query("SELECT * FROM users WHERE userId = ?", [
+    const updatedUser = await db.query("SELECT * FROM Users WHERE userId = ?", [
       userId,
     ]);
     res.send({ user: updatedUser[0] }); // Return the first row of the updated user data
