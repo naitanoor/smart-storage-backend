@@ -28,24 +28,41 @@ router.post("/signup", async (req, res) => {
   const { name, email, password } = req.body;
   try {
     // Check if email already exists
-    const emailExists = await checkEmailExists(email);
-    if (emailExists) {
-      return res.status(400).send("Email already exists");
+    const user = await db.query("SELECT * FROM Users WHERE email = ?", [email]);
+
+    if (user.length > 0) {
+      const existingUser = user[0];
+      if (existingUser.status === "INACTIVE") {
+        return res.status(400).send({
+          success: false,
+          message:
+            "Your account is inactive. Please contact the admin to reactivate your account.",
+        });
+      }
+      return res
+        .status(400)
+        .send({ success: false, message: "Email already exists" });
     }
 
-    // Insert new user
+    // Insert new user with default status 'ACTIVE'
     const result = await db.query(
-      "INSERT INTO Users (name, email, password) VALUES (?, ?, ?)",
+      "INSERT INTO Users (name, email, password, status) VALUES (?, ?, ?, 'ACTIVE')",
       [name, email, password]
     );
+
     if (result.length === 0) {
-      res.status(401).send("Invalid email or password");
+      res
+        .status(401)
+        .send({ success: false, message: "Invalid email or password" });
       return;
     }
-    res.send("User signup successful");
+
+    res.send({ success: true, message: "User signup successful" });
   } catch (error) {
     console.error("Error signing up user:", error);
-    res.status(500).send("Error signing up user. " + error);
+    res
+      .status(500)
+      .send({ success: false, message: "Error signing up user. " + error });
   }
 });
 
@@ -64,6 +81,16 @@ router.post("/signin", async (req, res) => {
     }
 
     const user = result[0];
+
+    if (user.status !== "ACTIVE") {
+      res.status(401).send({
+        success: false,
+        message:
+          "Your account is inactive. Please contact the admin to reactivate your account.",
+      });
+      return;
+    }
+
     res.json({
       success: true,
       message: "User signin successful",
@@ -174,6 +201,41 @@ router.put("/update/:userId", async (req, res) => {
   } catch (error) {
     console.error("Error updating user name:", error);
     res.status(500).send("Error updating user name");
+  }
+});
+
+router.put("/change-account-status/:userId", async (req, res) => {
+  const { userId } = req.params;
+  const { email, password } = req.body;
+
+  try {
+    // Check if email and password match
+    const user = await db.query(
+      "SELECT * FROM Users WHERE userId = ? AND email = ? AND password = ?",
+      [userId, email, password]
+    );
+
+    if (user.length === 0) {
+      return res
+        .status(401)
+        .send({ success: false, message: "Incorrect password" });
+    }
+
+    // Update user status to 'INACTIVE'
+    await db.query("UPDATE Users SET status = 'INACTIVE' WHERE userId = ?", [
+      userId,
+    ]);
+
+    res.send({
+      success: true,
+      message: "Your account has been deactivated successfully",
+    });
+  } catch (error) {
+    console.error("Error updating user status:", error);
+    res.status(500).send({
+      success: false,
+      message: "Error updating user status. " + error,
+    });
   }
 });
 
