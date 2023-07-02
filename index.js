@@ -25,6 +25,6 @@ app.use("/boxes", boxesRoute);
 const storageRoute = require("./routes/storage");
 app.use("/storage", storageRoute);
 
-app.listen(PORT, () => {
-  console.log(`Server listening at http://localhost:${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Server listening at http://0.0.0.0:${PORT}`);
 });
