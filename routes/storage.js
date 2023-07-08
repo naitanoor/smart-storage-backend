@@ -50,7 +50,10 @@ router.get("/warehouses/:userId", async (req, res) => {
   try {
     const result = await db.query(query, [userId]);
     if (result.length === 0) {
-      res.status(401).send("Error adding warehouse.");
+      res.status(401).send({
+        success: false,
+        message: "No warehouses found, add one first.",
+      });
       return;
     }
     return res.status(201).json({
@@ -60,7 +63,10 @@ router.get("/warehouses/:userId", async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching warehouses:", error);
-    res.status(500).send("Error fetching warehouses." + error);
+    res.status(500).send({
+      success: false,
+      message: "Something went wrong",
+    });
   }
 });
 
@@ -125,6 +131,11 @@ router.get("/storerooms/:warehouseId/:userId", async (req, res) => {
       "SELECT * FROM Storerooms WHERE warehouse_id = ? AND userId = ?",
       [warehouseId, userId]
     );
+
+    if (storerooms.length === 0) {
+      res.status(401).send("No storerooms found, add one first.");
+      return;
+    }
 
     res.status(200).json({ success: true, data: storerooms });
   } catch (error) {

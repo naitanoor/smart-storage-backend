@@ -57,7 +57,7 @@ router.post("/signup", async (req, res) => {
       return;
     }
 
-    res.send({ success: true, message: "User signup successful" });
+    res.send({ success: true, message: "Account created successfully" });
   } catch (error) {
     console.error("Error signing up user:", error);
     res
@@ -69,18 +69,23 @@ router.post("/signup", async (req, res) => {
 router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
   try {
-    const result = await db.query(
-      "SELECT * FROM Users WHERE email = ? AND password = ?",
-      [email, password]
-    );
+    const result = await db.query("SELECT * FROM Users WHERE email = ?", [
+      email,
+    ]);
+
     if (result.length === 0) {
       res
         .status(401)
-        .send({ success: false, message: "Invalid email or password" });
+        .send({ success: false, message: "User does not exists!" });
       return;
     }
 
     const user = result[0];
+
+    if (user.password !== password) {
+      res.status(401).send({ success: false, message: "Incorrect password" });
+      return;
+    }
 
     if (user.status !== "ACTIVE") {
       res.status(401).send({

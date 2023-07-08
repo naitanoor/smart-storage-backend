@@ -1,0 +1,76 @@
+CREATE TABLE Users (
+  userId INT(5) UNSIGNED ZEROFILL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(50),
+  email VARCHAR(100),
+  password VARCHAR(100),
+  status VARCHAR(10) NOT NULL DEFAULT 'ACTIVE'
+);
+
+CREATE TABLE Boxes (
+  boxId INT AUTO_INCREMENT PRIMARY KEY,
+  boxName VARCHAR(255),
+  boxNumber VARCHAR(50),
+  rackNumber VARCHAR(50),
+  storeRoom VARCHAR(50),
+  warehouse VARCHAR(50),
+  qrCode VARCHAR(255),
+  userId INT,
+  FOREIGN KEY (userId) REFERENCES Users(userId)
+);
+
+CREATE TABLE Items (
+  itemId INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255),
+  itemNumber VARCHAR(50),
+  keywords JSON,
+  boxId INT,
+  itemImage VARCHAR(255),
+  FOREIGN KEY (boxId) REFERENCES Boxes(boxId)
+);
+
+
+CREATE TABLE AuthReset (
+  authId INT AUTO_INCREMENT PRIMARY KEY,
+  email VARCHAR(255) NOT NULL,
+  resetCode VARCHAR(255) NOT NULL,
+  resetCodeStatus VARCHAR(255) NOT NULL
+);
+
+
+CREATE TABLE Warehouses (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  location VARCHAR(255) NOT NULL,
+  capacity INT,
+  contact_person VARCHAR(255) NOT NULL,
+  contact_phone VARCHAR(20) NOT NULL,
+  userId INT,
+  FOREIGN KEY (userId) REFERENCES Users(userId)
+);
+
+CREATE TABLE Storerooms (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  capacity INT,
+  contact_person VARCHAR(255) NOT NULL,
+  contact_phone VARCHAR(20) NOT NULL,
+  warehouse_id INT,
+  FOREIGN KEY (warehouse_id) REFERENCES Warehouses(id),
+  userId BINARY(16),
+  FOREIGN KEY (userId) REFERENCES Users(userId)
+);
+
+
+CREATE TABLE Racks (
+  rack_id INT PRIMARY KEY AUTO_INCREMENT,
+  rack_name VARCHAR(255) NOT NULL,
+  capacity INT,
+  rack_type VARCHAR(255),
+  rack_number INT,
+  storeroom_id INT,
+  warehouse_id INT,
+  userId BINARY(16),
+  FOREIGN KEY (storeroom_id) REFERENCES Storerooms(id),
+  FOREIGN KEY (warehouse_id) REFERENCES Warehouses(id),
+  FOREIGN KEY (userId) REFERENCES Users(userId)
+);
