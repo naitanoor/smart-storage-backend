@@ -4,8 +4,9 @@
   "description": "server",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start1": "nodemon index.js",
+    "build": "webpack --config webpack.config.js",
+    "start": "node dist/bundle.js"
   },
   "author": "Raima",
   "license": "ISC",
@@ -19,6 +20,9 @@
     "nodemailer": "^6.9.2"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-node-externals": "^3.0.0"
   }
 }
