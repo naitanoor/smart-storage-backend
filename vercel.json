@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "index.js",
+      "use": "@now/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/boxes",
+      "dest": "/routes/boxes.js"
+    },
+    {
+      "src": "/example",
+      "dest": "/routes/example.js"
+    },
+    {
+      "src": "/storage",
+      "dest": "/routes/storage.js"
+    },
+    {
+      "src": "/users",
+      "dest": "/routes/users.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "index.js"
+    }
+  ]
+}
