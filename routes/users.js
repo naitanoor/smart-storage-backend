@@ -68,6 +68,10 @@ router.post("/signup", async (req, res) => {
 
 router.post("/signin", async (req, res) => {
   const { email, password } = req.body;
+  console.log({
+    email,
+    password,
+  });
   try {
     const result = await db.query("SELECT * FROM Users WHERE email = ?", [
       email,

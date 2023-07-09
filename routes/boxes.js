@@ -102,6 +102,12 @@ router.get("/search", async (req, res) => {
 
     const boxResults = await db.query(sql, params);
 
+    if (boxResults.length === 0) {
+      return res.status(400).json({
+        message: "No boxes found!",
+      });
+    }
+
     const boxes = [];
     for (const box of boxResults) {
       const {
