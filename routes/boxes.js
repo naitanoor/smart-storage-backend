@@ -197,7 +197,7 @@ router.get("/search", async (req, res) => {
     res.json({ boxes });
   } catch (error) {
     console.error("Error searching for boxes:", error);
-    res.status(500).send("Error searching for boxes");
+    res.status(500).send(error);
   }
 });
 
