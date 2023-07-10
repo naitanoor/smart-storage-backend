@@ -104,7 +104,7 @@ router.get("/search", async (req, res) => {
 
     if (boxResults.length === 0) {
       return res.status(400).json({
-        message: "No boxes found!",
+        message: "No box found!",
       });
     }
 
