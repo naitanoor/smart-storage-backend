@@ -1,9 +1,9 @@
 const config = {
   db: {
-    host: "34.133.42.44",
+    host: "localhost",
     user: "root",
     password: "12345678",
-    database: "smart_storage",
+    database: "freedb_smart_storage",
   },
   listPerPage: 10,
 };

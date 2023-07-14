@@ -1,5 +1,6 @@
 const mysql = require("mysql2/promise");
-const config = require("../configuration/db.config");
+const config = require("../configuration/local.db.config");
+// const config = require("../configuration/db.config");
 
 let connection = null;
 
