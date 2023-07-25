@@ -8,7 +8,6 @@ router.post("/warehouse/add", async (req, res) => {
   if (
     !warehouse?.name ||
     !warehouse?.location ||
-    !warehouse?.capacity ||
     !warehouse?.contact_person ||
     !warehouse?.contact_phone
   ) {
@@ -19,12 +18,12 @@ router.post("/warehouse/add", async (req, res) => {
 
   try {
     const result = await db.query(
-      "INSERT INTO Warehouses (userId, name, location, capacity, contact_person, contact_phone) VALUES (?, ?, ?, ?, ?, ?)",
+      "INSERT INTO Warehouses (userId, name, location, contact_person, contact_phone) VALUES (?, ?, ?, ?, ?)",
       [
         warehouse.userId,
         warehouse.name,
         warehouse.location,
-        warehouse.capacity,
+        // warehouse.capacity,
         warehouse.contact_person,
         warehouse.contact_phone,
       ]

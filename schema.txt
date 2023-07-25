@@ -39,7 +39,6 @@ CREATE TABLE Warehouses (
   id INT PRIMARY KEY AUTO_INCREMENT,
   name VARCHAR(255) NOT NULL,
   location VARCHAR(255) NOT NULL,
-  capacity INT,
   contact_person VARCHAR(255) NOT NULL,
   contact_phone VARCHAR(20) NOT NULL,
  userId INT(5) UNSIGNED ZEROFILL,
