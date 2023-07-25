@@ -191,7 +191,6 @@ router.post("/rack/add", async (req, res) => {
     res.status(500).json({ success: false, message: "Error adding rack" });
   }
 });
-
 router.get("/racks/:userId/:warehouseId/:storeroomId", async (req, res) => {
   const { userId, warehouseId, storeroomId } = req.params;
 
@@ -207,6 +206,20 @@ router.get("/racks/:userId/:warehouseId/:storeroomId", async (req, res) => {
     res
       .status(500)
       .json({ success: false, message: "Failed to retrieve racks" });
+  }
+});
+
+router.get("/products", async (req, res) => {
+  try {
+    // Fetch all products from the "Products" table.
+    const products = await db.query("SELECT * FROM Products");
+
+    res.status(200).json({ success: true, data: products });
+  } catch (error) {
+    console.error("Error retrieving products:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to retrieve products" });
   }
 });
 

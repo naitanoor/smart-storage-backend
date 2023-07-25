@@ -71,3 +71,26 @@ CREATE TABLE Racks (
   FOREIGN KEY (warehouse_id) REFERENCES Warehouses(id),
   FOREIGN KEY (userId) REFERENCES Users(userId)
 );
+
+CREATE TABLE Products (
+  productId INT(10) UNSIGNED ZEROFILL AUTO_INCREMENT PRIMARY KEY,
+  productName VARCHAR(100) NOT NULL,
+  productImage VARCHAR(255),
+  price DECIMAL(10, 2) NOT NULL,
+  quantity INT(10) UNSIGNED NOT NULL
+);
+
+CREATE TABLE Orders (
+  orderId INT(10) UNSIGNED ZEROFILL AUTO_INCREMENT PRIMARY KEY,
+  userId INT(5) UNSIGNED ZEROFILL,
+  productId INT(10) UNSIGNED ZEROFILL,
+  productTitle VARCHAR(100),
+  quantity INT(10) UNSIGNED,
+  paymentStatus VARCHAR(20),
+  shippingAddress TEXT,
+  totalAmount DECIMAL(10, 2),
+  deliveryStatus VARCHAR(20),
+  orderDate DATE,
+  FOREIGN KEY (userId) REFERENCES Users(userId),
+  FOREIGN KEY (productId) REFERENCES Products(productId)
+);

@@ -24,6 +24,10 @@
       "dest": "/routes/users.js"
     },
     {
+      "src": "/orders",
+      "dest": "/routes/orders.js"
+    },
+    {
       "src": "/(.*)",
       "dest": "index.js"
     }
