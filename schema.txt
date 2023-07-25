@@ -93,3 +93,21 @@ CREATE TABLE Orders (
   FOREIGN KEY (userId) REFERENCES Users(userId),
   FOREIGN KEY (productId) REFERENCES Products(productId)
 );
+
+INSERT INTO Products (productName, productImage, price, quantity)
+VALUES
+  ('Packaging Box - Small', 'https://m.media-amazon.com/images/I/71mp5WFJkWS.__AC_SX300_SY300_QL70_ML2_.jpg', 1.99, 100),
+  ('Packaging Box - Medium', 'https://m.media-amazon.com/images/I/51x9QA0Na6L._AC_SX679_.jpg', 3.49, 75),
+  ('Packaging Box - Large', 'https://m.media-amazon.com/images/I/91NPU-XNzkL.__AC_SX300_SY300_QL70_ML2_.jpg', 4.99, 50),
+  ('Bubble Wrap Roll - 10m', 'https://m.media-amazon.com/images/I/618GBoWC-DL.__AC_SY300_SX300_QL70_ML2_.jpg', 8.99, 30),
+  ('Air Pillows - Pack of 50', 'https://m.media-amazon.com/images/I/71mp5WFJkWS.__AC_SX300_SY300_QL70_ML2_.jpg', 5.99, 60),
+  ('Tape Dispenser', 'https://m.media-amazon.com/images/I/51x9QA0Na6L._AC_SX679_.jpg', 2.49, 40),
+  ('Packaging Tape - Clear', 'https://m.media-amazon.com/images/I/91NPU-XNzkL.__AC_SX300_SY300_QL70_ML2_.jpg', 1.99, 100),
+  ('Packaging Peanuts - 1kg', 'https://m.media-amazon.com/images/I/618GBoWC-DL.__AC_SY300_SX300_QL70_ML2_.jpg', 7.99, 20),
+  ('Cardboard Sheets - Pack of 5', 'https://m.media-amazon.com/images/I/71mp5WFJkWS.__AC_SX300_SY300_QL70_ML2_.jpg', 4.49, 50),
+  ('Cushion Mailers - Pack of 10', 'https://m.media-amazon.com/images/I/51x9QA0Na6L._AC_SX679_.jpg', 6.99, 35),
+  ('Shipping Labels - Pack of 100', 'https://m.media-amazon.com/images/I/91NPU-XNzkL.__AC_SX300_SY300_QL70_ML2_.jpg', 3.99, 70),
+  ('Packaging Tape Gun', 'https://m.media-amazon.com/images/I/618GBoWC-DL.__AC_SY300_SX300_QL70_ML2_.jpg', 9.99, 25),
+  ('Kraft Paper Roll - 20m', 'https://m.media-amazon.com/images/I/71mp5WFJkWS.__AC_SX300_SY300_QL70_ML2_.jpg', 6.49, 40),
+  ('Plastic Envelopes - Pack of 20', 'https://m.media-amazon.com/images/I/51x9QA0Na6L._AC_SX679_.jpg', 7.49, 30),
+  ('Corrugated Boxes - Pack of 10', 'https://m.media-amazon.com/images/I/91NPU-XNzkL.__AC_SX300_SY300_QL70_ML2_.jpg', 12.99, 15);
