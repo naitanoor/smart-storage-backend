@@ -10,8 +10,8 @@ async function createTransporter() {
     port: 587, // or the appropriate port for your email service
     secure: false, // true for 465, false for other ports
     auth: {
-      user: "israr.work210@gmail.com",
-      pass: "xaaqjjmfxxdbmdkf",
+      user: "simplesmartstorage02@gmail.com",
+      pass: "yfjfbrpznxguogtc",
     },
   });
 }
