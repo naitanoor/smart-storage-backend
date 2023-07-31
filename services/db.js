@@ -32,13 +32,6 @@ async function rollback() {
   await conn.rollback();
 }
 
-// async function releaseConnection() {
-//   if (connection) {
-//     connection.release();
-//     connection = null;
-//   }
-// }
-
 module.exports = {
   query,
   beginTransaction,

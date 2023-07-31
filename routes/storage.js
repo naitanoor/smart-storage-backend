@@ -8,7 +8,6 @@ router.post("/warehouse/add", async (req, res) => {
   if (
     !warehouse?.name ||
     !warehouse?.location ||
-    !warehouse?.capacity ||
     !warehouse?.contact_person ||
     !warehouse?.contact_phone
   ) {
@@ -19,12 +18,11 @@ router.post("/warehouse/add", async (req, res) => {
 
   try {
     const result = await db.query(
-      "INSERT INTO Warehouses (userId, name, location, capacity, contact_person, contact_phone) VALUES (?, ?, ?, ?, ?, ?)",
+      "INSERT INTO Warehouses (userId, name, location, contact_person, contact_phone) VALUES (?, ?, ?, ?, ?)",
       [
         warehouse.userId,
         warehouse.name,
         warehouse.location,
-        warehouse.capacity,
         warehouse.contact_person,
         warehouse.contact_phone,
       ]
@@ -94,7 +92,7 @@ router.post("/storeroom/add", async (req, res) => {
     if (warehouseResult.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "Warehouse not found or does not match the user",
+        message: "Warehouse are not added, please add one first.",
       });
     }
 
@@ -133,7 +131,10 @@ router.get("/storerooms/:warehouseId/:userId", async (req, res) => {
     );
 
     if (storerooms.length === 0) {
-      res.status(401).send("No storerooms found, add one first.");
+      res.status(401).send({
+        success: false,
+        message: "No storerooms found, add one first.",
+      });
       return;
     }
 
@@ -200,6 +201,14 @@ router.get("/racks/:userId/:warehouseId/:storeroomId", async (req, res) => {
       "SELECT * FROM Racks WHERE warehouse_id = ? AND storeroom_id = ? AND userId = ?",
       [warehouseId, storeroomId, userId]
     );
+    if (racks?.length === 0) {
+      res.status(401).send({
+        success: false,
+        message: "No racks found in this storeroom, add one first.",
+      });
+      return;
+    }
+
     res.status(200).json({ success: true, data: racks });
   } catch (error) {
     console.error("Error retrieving racks:", error);
