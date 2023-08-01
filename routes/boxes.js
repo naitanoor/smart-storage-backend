@@ -86,7 +86,7 @@ router.get("/search", async (req, res) => {
   try {
     const sql = `
     SELECT b.boxId, b.boxName, b.boxNumber, b.rackNumber, b.qrCode, b.userId,
-           w.id AS warehouseId, w.name AS warehouseName, w.location AS warehouseLocation, w.capacity AS warehouseCapacity,
+           w.id AS warehouseId, w.name AS warehouseName, w.location AS warehouseLocation,
            w.contact_person AS warehouseContactPerson, w.contact_phone AS warehouseContactPhone,
            s.id AS storeroomId, s.name AS storeroomName, s.capacity AS storeroomCapacity,
            s.contact_person AS storeroomContactPerson, s.contact_phone AS storeroomContactPhone,
@@ -119,7 +119,6 @@ router.get("/search", async (req, res) => {
         warehouseId,
         warehouseName,
         warehouseLocation,
-        warehouseCapacity,
         warehouseContactPerson,
         warehouseContactPhone,
         storeroomId,
@@ -157,7 +156,6 @@ router.get("/search", async (req, res) => {
         warehouseId,
         name: warehouseName,
         location: warehouseLocation,
-        capacity: warehouseCapacity,
         contactPerson: warehouseContactPerson,
         contactPhone: warehouseContactPhone,
       };
